@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin IDE - Navegador de Arquivos</title>
+    <link rel="stylesheet" href="style.css">
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.min.js"></script>
+    -->
+    <script src="monaco.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-folder-open"></i> Navegador</h2>
+                <div class="sidebar-controls">
+                    <button id="btn-back" title="Voltar" class="btn-icon">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button id="btn-home" title="Pasta Inicial" class="btn-icon">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button id="btn-refresh" title="Atualizar" class="btn-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Caminho atual -->
+            <div class="current-path">
+                <div id="current-path-display" class="path-text" title="Clique para copiar">
+                    <i class="fas fa-folder"></i>
+                    <span id="path-text">Carregando...</span>
+                </div>
+                <button id="btn-change-folder" class="btn-change-folder" title="Escolher outra pasta">
+                    <i class="fas fa-folder-plus"></i> Escolher Pasta
+                </button>
+            </div>
+            
+            <!-- Árvore de arquivos -->
+            <div id="file-tree" class="file-tree">
+                <div class="tree-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                </div>
+            </div>
+            
+            <!-- Estatísticas -->
+            <div class="folder-stats">
+                <div class="stat-item">
+                    <i class="fas fa-folder"></i>
+                    <span id="folder-count">0</span> pastas
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-file"></i>
+                    <span id="file-count">0</span> arquivos
+                </div>
+            </div>
+        </div>
+
+        <!-- Área principal -->
+        <div class="main-content">
+            <div class="editor-header">
+                <div class="file-info">
+                    <span id="current-file">
+                        <i class="far fa-file-code"></i> Nenhum arquivo selecionado
+                    </span>
+                    <span id="file-size" class="file-size">-</span>
+                </div>
+                <div class="editor-actions">
+                    <button id="save-file" class="btn-save" title="Salvar (Ctrl+S)">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Container do Monaco Editor -->
+            <div id="editor-container" class="editor-container"></div>
+            
+            <!-- Status bar -->
+            <div class="status-bar">
+                <div id="status-message" class="status-message">Pronto</div>
+                <div class="status-info">
+                    <span id="language-info">-</span>
+                    <span id="line-info">Linha 1, Coluna 1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para escolher pasta -->
+    <div id="folder-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-folder-open"></i> Escolher Pasta</h3>
+                <button class="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Digite o caminho da pasta que deseja abrir:</p>
+                <input type="text" id="folder-path-input" class="folder-input" 
+                       placeholder="Ex: /home/usuario/projetos ou C:\Users\usuario\projetos">
+                
+                <div class="modal-actions">
+                    <button id="btn-browse" class="btn-browse">
+                        <i class="fas fa-search"></i> Procurar...
+                    </button>
+                    <button id="btn-open-folder" class="btn-primary">
+                        <i class="fas fa-folder-open"></i> Abrir Pasta
+                    </button>
+                    <button id="btn-cancel-folder" class="btn-secondary">
+                        Cancelar
+                    </button>
+                </div>
+                
+                <div class="folder-suggestions">
+                    <p><strong>Sugestões:</strong></p>
+                    <ul id="suggestions-list">
+                        <li data-path="."><i class="fas fa-home"></i> Pasta Atual</li>
+                        <li data-path=".."><i class="fas fa-level-up-alt"></i> Pasta Acima</li>
+                        <li data-path="./public"><i class="fas fa-folder"></i> Pasta Public</li>
+                        <li data-path="./src"><i class="fas fa-folder"></i> Pasta Src</li>
+                    </ul>
+                </div>
+                
+                <div id="folder-error" class="error-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input hidden para seleção de pasta -->
+    <input type="file" id="folder-selector" webkitdirectory directory multiple style="display: none;">
+
+    <script src="script.js"></script>
+</body>
+</html>
